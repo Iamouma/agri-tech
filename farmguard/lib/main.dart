@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'main_screen.dart';
+import 'register_screen.dart';
+import 'login_screen.dart';
+import 'camera_screen.dart';
+import 'results_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,40 +13,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
-    );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Crop Disease Detector'),
+      title: 'Crop Monitoring App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the home screen
-              },
-              child: Text('Login'),
-            ),
-          ],
-        ),
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MainScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/login': (context) => LoginScreen(),
+        '/camera': (context) => CameraScreen(),
+        '/results': (context) => ResultsScreen(),
+      },
     );
   }
 }
