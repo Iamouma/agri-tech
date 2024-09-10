@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:io'; // Import the dart:io library to use the File class
 
 class ResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final imagePath = ModalRoute.of(context)!.settings.arguments as String;
+    final results = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
 
     return Scaffold(
       appBar: AppBar(
@@ -14,9 +13,9 @@ class ResultsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.file(File(imagePath)),
+            Text('Disease Detection Results:'),
             SizedBox(height: 20),
-            Text('Disease Detection Results will be shown here.'),
+            Text(results.toString()), // Display results
           ],
         ),
       ),

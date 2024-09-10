@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io'; // Import the dart:io library to use the File class
+import 'dart:io';
+import 'dart:typed_data';
+import 'disease_classifier.dart'; // Import your classifier
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -8,17 +10,35 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  final ImagePicker _picker = ImagePicker();
-  XFile? _image;
+  File? _image;
+  final picker = ImagePicker();
+  late DiseaseClassifier _classifier;
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+  @override
+  void initState() {
+    super.initState();
+    _classifier = DiseaseClassifier(); // Initialize the classifier
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
     setState(() {
-      _image = pickedFile;
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+
+        // Process the image
+        _processImage(_image!);
+      }
     });
-    if (_image != null) {
-      Navigator.pushNamed(context, '/results', arguments: _image!.path);
-    }
+  }
+
+  void _processImage(File image) async {
+    Uint8List imageBytes = await image.readAsBytes(); // Convert image to bytes
+    List<dynamic> result = _classifier.classifyImage(imageBytes); // Get predictions
+
+    // Display results
+    Navigator.pushNamed(context, '/results', arguments: result);
   }
 
   @override
@@ -28,18 +48,14 @@ class _CameraScreenState extends State<CameraScreen> {
         title: Text('Capture Image'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: Text('Take a Picture'),
-            ),
-            _image != null
-                ? Image.file(File(_image!.path))
-                : Text('No image selected.'),
-          ],
-        ),
+        child: _image == null
+            ? Text('No image selected.')
+            : Image.file(_image!),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: getImage,
+        tooltip: 'Pick Image',
+        child: Icon(Icons.add_a_photo),
       ),
     );
   }
