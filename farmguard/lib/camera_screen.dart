@@ -21,7 +21,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera); // Updated to pickImage
 
     setState(() {
       if (pickedFile != null) {

@@ -1,4 +1,5 @@
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'dart:typed_data';
 
 class DiseaseClassifier {
   late Interpreter _interpreter;
