@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "847162600560",
+    "project_id": "farmguard-f7ba7",
+    "storage_bucket": "farmguard-f7ba7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847162600560:android:87fb9b5e500f10526cd8b5",
+        "android_client_info": {
+          "package_name": "com.example.farmguard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_Y4BiHwP-RgLcyp-v21-VIgrFJ7hG5wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
