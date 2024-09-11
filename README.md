@@ -191,7 +191,7 @@ Convert the trained model to TensorFlow.js format for deployment:
     tensorflowjs_converter --input_format=keras model.h5 ./model
 
 
-Contributing
+### Contributing
 
 Contributions are welcome, Please follow these steps:
 
