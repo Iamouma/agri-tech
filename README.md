@@ -1,4 +1,4 @@
-## Farmguard
+# Farmguard
 
 A Flutter-based mobile application that detects diseases in crops using machine learning. The app allows users to capture or upload images of crops, process these images to predict possible diseases, and provide relevant treatment recommendations. The backend is powered by Firebase, which handles user authentication, image storage, and cloud functions for running the machine learning model.
 
