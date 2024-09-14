@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
+  final String disease;
+  final String recommendations;
+
+  ResultsScreen({required this.disease, required this.recommendations});
+
   @override
   Widget build(BuildContext context) {
-    final results = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Results'),
+        title: Text('Diagnosis Results'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Disease Detection Results:'),
+            Text('Disease: $disease', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
-            Text(results.toString()), // Display results
+            Text('Recommendations:', style: TextStyle(fontSize: 18)),
+            Text(recommendations),
+            SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Save & Return'),
+            )
           ],
         ),
       ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MainScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crop Monitoring App'),
+        title: Text('farmguard'),
       ),
       body: Center(
         child: Column(
@@ -17,17 +17,12 @@ class MainScreen extends StatelessWidget {
               },
               child: Text('Capture Crop Image'),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/history');
               },
-              child: Text('Login'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-              child: Text('Register'),
+              child: Text('View Past Diagnoses'),
             ),
           ],
         ),

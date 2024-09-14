@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'my_app.dart'; // Import the MyApp widget from my_app.dart
+import 'splash_screen.dart';
+import 'home_screen.dart';
+import 'camera_screen.dart';
+import 'analysis_screen.dart';
+import 'results_screen.dart';
+import 'history_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Initialize Firebase
-  runApp(MyApp()); // Run the MyApp widget
+void main() {
+  runApp(CropMonitoringApp());
+}
+
+class CropMonitoringApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,  // Remove debug banner
+      title: 'Crop Monitoring App',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/home': (context) => HomeScreen(),
+        '/camera': (context) => CameraScreen(),
+        '/analysis': (context) => AnalysisScreen(),
+        '/results': (context) => ResultsScreen(
+              disease: 'Example Disease',
+              recommendations: 'Example treatment recommendations',
+            ),
+        '/history': (context) => HistoryScreen(),
+      },
+    );
+  }
 }
