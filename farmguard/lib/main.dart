@@ -7,15 +7,15 @@ import 'results_screen.dart';
 import 'history_screen.dart';
 
 void main() {
-  runApp(CropMonitoringApp());
+  runApp(Farmguard());
 }
 
-class CropMonitoringApp extends StatelessWidget {
+class Farmguard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,  // Remove debug banner
-      title: 'Crop Monitoring App',
+      title: 'farmguard',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
