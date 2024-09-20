@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 import 'home_screen.dart';
-import 'camera_screen.dart';
+import 'upload_screen.dart';
 import 'analysis_screen.dart';
 import 'results_screen.dart';
 import 'history_screen.dart';
@@ -23,7 +23,7 @@ class Farmguard extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(),
         '/home': (context) => HomeScreen(),
-        '/camera': (context) => CameraScreen(),
+        '/upload': (context) => ImageUploadScreen(),
         '/analysis': (context) => AnalysisScreen(),
         '/results': (context) => ResultsScreen(
               disease: 'Example Disease',
