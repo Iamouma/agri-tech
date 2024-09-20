@@ -1,6 +1,6 @@
 # Farmguard
 
-A Flutter-based mobile application that detects diseases in crops using machine learning. The app allows users to capture or upload images of crops, process these images to predict possible diseases, and provide relevant treatment recommendations. The backend is powered by Firebase, which handles user authentication, image storage, and cloud functions for running the machine learning model.
+A Flutter-based mobile application that detects diseases in crops. This project is built using Flutter for the frontend and Node.js/Express.js for the backend. The application allows users to upload images of plants and receive disease classification results. The backend utilizes TensorFlow.js with the MobileNet model to identify potential diseases in plants.
 
 ## Table of Contents
 
@@ -8,199 +8,157 @@ A Flutter-based mobile application that detects diseases in crops using machine 
 
 1. [Features](#features)
 
-2. [Technology Stack](#technology-stack)
+2. [Project Structure](#project-structure)
+   
+3. [Installation](#installation)
+ 
+4. [Running the Application](#running-the-application)
 
-3. [Architecture](#architecture)
+5. [API Endpoints](#api-endpoints)
 
-4. [Setup and Installation](#setup-and-installation)
-
-5. [Firebase Setup](#firebase-setup)
-
-6. [Usage](#usage)
-
-7. [Model Training](#model-trianing)
-
-8. [Contributing](#contributing)
+6. [Contributing](#contributing)
 
 ### Introduction
 
-The farmguard is designed to assist farmers and agricultural experts in identifying crop diseases at an early stage. By simply capturing or uploading an image of a crop, users can get an instant diagnosis of possible diseases along with recommended treatments. This application leverages machine learning to analyze crop images and is built using Flutter for the frontend and Firebase for backend services.
+This project is designed to assist farmers and agricultural experts in identifying plant diseases through image analysis. Users can upload an image of a plant leaf via the mobile app, and the image is then sent to the backend, where a trained MobileNet model processes it to predict the disease.
 
 ### Features
 
-  * User Authentication: Secure login and registration using Firebase Authentication.
-
-  * Image Capture & Upload: Users can capture images using the camera or upload them from the gallery.
-
-  * Disease Detection: Machine learning model processes the image and predicts possible crop diseases.
-
-  * Treatment Recommendations: Provides suggestions and treatments for the identified disease.
-
-  * History Tracking: Users can view a history of past analyses.
+  * Image Upload: Users can select an image from their device’s gallery.
+    
+  * Image Classification: The backend classifies the image to detect plant diseases using TensorFlow.js and the MobileNet model.
+    
+  * Results Display: After classification, the app displays the detected plant disease and the confidence level.
+    
+  * REST API: The app communicates with a Node.js backend to process images and receive classification results.
 
 
-### Technology Stack
+###  Project Structure
 
-  * Frontend: Flutter
+##### Backend
 
-  * Backend: Firebase (Authentication, Cloud Firestore, Cloud Storage, Cloud Functions)
+The backend is built using Node.js and Express.js, integrating TensorFlow.js and the MobileNet model to classify plant diseases. It handles file uploads, processes images, and returns predictions.
 
-  * Machine Learning: TensorFlow.js for model deployment, Python for model training
+    backend/
+    │
+    ├── routes/
+    │   └── imageRoutes.js      # Routes for handling image uploads and classification
+    ├── uploads/                # Stores uploaded images
+    ├── index.js                # Main server entry point
+    ├── package.json            # Backend dependencies and scripts
+    └── README.md               # Backend readme
+    
+##### Flutter Frontend
 
-  * Other Tools: Git, Visual Studio Code, Firebase CLI
+The Flutter app allows users to select images from their gallery and send them to the backend. It displays the disease classification results to the user.
 
-### Architecture
+    flutter_frontend/
+    │
+    ├── lib/
+    │   ├── main.dart                   # Main entry point for Flutter
+    │   └── image_upload_screen.dart     # UI for selecting and uploading images
+    ├── pubspec.yaml                    # Flutter dependencies
+    └── README.md                       # Frontend readme
 
-The application architecture is a combination of client-server and serverless models:
+    
+### Installation
 
-  * Client: Flutter app running on Android/iOS.
+##### Backend Setup
 
-  * Backend: Firebase serves as the backend, providing services like authentication, database, storage, and cloud functions.
-
-  * Machine Learning: The model is trained offline using Python and TensorFlow. For inference, the model is deployed using TensorFlow.js and executed within Firebase Cloud Functions.
-
-### Setup and Installation
-
-##### Prerequisites
-
-  * Flutter SDK: Install Flutter from the official site.
-
-  * Firebase Account: Create a Firebase account at firebase.google.com.
-
-  * Python: For model training, you need Python 3.x installed.
-
-##### Installation Steps
-
-Clone the Repository
+Clone the repository:
 
     git clone https://github.com/yourusername/agri-tech.git
+    cd backend
+
+Install Node.js dependencies: Make sure you have Node.js installed. Then run:
+
+    npm install
+
+Create uploads directory: If not already created, make a directory to store uploaded images:
+
+    mkdir uploads
+
+Run the backend server: Start the server on port 5000 by running:
+
+    node index.js
+    
+You should see the message:
+
+    Server running on port 5000
+
+##### Flutter Frontend Setup
+
+Navigate to the frontend directory:
 
     cd farmguard
 
-Install Flutter Dependencies
+Install Flutter dependencies: Make sure you have Flutter installed. Then run:
 
     flutter pub get
+
+Update the Backend URL: In the image_upload_screen.dart file, update the Uri with your backend server’s IP address or domain:
+
+    final uri = Uri.parse('http://your-backend-server-ip:5000/api/images/upload');
     
-Set Up Firebase
-
-    Follow the Firebase Setup section below.
-
-Run the App
+Run the Flutter app: You can run the app on an emulator or a physical device using:
 
     flutter run
-    
-### Firebase Setup
 
-Step 1: Create a Firebase Project
+### Running the Application
 
-    Go to the Firebase Console.
-    Click on "Add Project" and follow the steps to create a new project.
-    Register your app by selecting the Android/iOS icon and following the instructions to download the google-services.json or GoogleService-Info.plist file.
-    
-Step 2: Add Firebase SDK to Your Flutter App
+##### Running the Backend
+To start the backend server, navigate to the backend directory and run:
 
-    Place the google-services.json (for Android) or GoogleService-Info.plist (for iOS) file in the appropriate directory (android/app or ios/Runner).
+    node index.js
 
-Open your pubspec.yaml file and add the necessary Firebase dependencies:
+This will start the server at http://localhost:5000. Ensure your device/emulator is connected to the same network.
 
-    dependencies:
-      firebase_core: latest_version
-      firebase_auth: latest_version
-      cloud_firestore: latest_version
-      firebase_storage: latest_version
-      firebase_functions: latest_version
+##### Running the Flutter App
+
+To start the Flutter app, navigate to the flutter_frontend directory and run:
+
+    flutter run
+
+Make sure the device or emulator you're using is connected to the same network as your backend server.
+
+### API Endpoints
+
+##### POST /api/images/upload
+
+This endpoint accepts an image file via a multipart/form-data POST request and returns plant disease classification results.
+
+  * URL: http://your-backend-server-ip:5000/api/images/upload
+  * Method: POST
+  * Body: Multipart form-data with an image file (image field).
+
+Sample Request
+
+    curl -X POST http://localhost:5000/api/images/upload \
+      -F 'image=@/path/to/image.jpg'
       
-Initialize Firebase in your Flutter app:
+Sample Response
 
-    import 'package:firebase_core/firebase_core.dart';
-    
-    void main() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      runApp(MyApp());
-    }
-    
-Step 3: Set Up Firebase Services
-
-  * Authentication: Enable Email/Password sign-in method in Firebase Authentication.
-
-  * Firestore: Create a Firestore database in test mode for initial development.
-
-  * Storage: Set up Firebase Storage for image uploads.
-
-  * Cloud Functions: Deploy a cloud function for image processing (see Deployment).
-
-### Usage
-##### Registration and Login
-
-New users can sign up using email and password.
-
-Existing users can log in to access the app features.
-
-##### Upload or Capture Image
-
-Users can either capture a photo using their device's camera or upload an image from their gallery.
-
-##### Disease Detection
-
-Once the image is uploaded, it is processed by the machine learning model to predict the possible disease.
-View Results and Recommendations
-
-After processing, the app displays the predicted disease along with detailed treatment recommendations.
-
-#### View History
-
-Users can view a history of all the images they have analyzed.
-
-### Model Training
-##### Data Collection
-
-Gather images of crops with various diseases.
-
-Use publicly available datasets like PlantVillage or create your own dataset.
-
-##### Model Training
-Use Python and TensorFlow/Keras to train a convolutional neural network (CNN).
-
-Example code:
-
-    import tensorflow as tf
-    from tensorflow.keras import layers, models
-    
-    model = models.Sequential([
-        layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
-        layers.MaxPooling2D((2, 2)),
-        layers.Conv2D(64, (3, 3), activation='relu'),
-        layers.MaxPooling2D((2, 2)),
-        layers.Conv2D(128, (3, 3), activation='relu'),
-        layers.Flatten(),
-        layers.Dense(512, activation='relu'),
-        layers.Dense(num_classes, activation='softmax')
-    ])
-    
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
-    
-    model.fit(train_images, train_labels, epochs=10, validation_data=(test_images, test_labels))
-    
-##### Model Export
-
-Convert the trained model to TensorFlow.js format for deployment:
-
-    tensorflowjs_converter --input_format=keras model.h5 ./model
+    {
+      "message": "Image processed",
+      "predictions": [
+        {
+          "className": "Tomato Blight",
+          "probability": 0.90
+        },
+        {
+          "className": "Healthy",
+          "probability": 0.07
+        }
+      ]
+     }
 
 
 ### Contributing
 
-Contributions are welcome, Please follow these steps:
+If you'd like to contribute to this project:
 
-Fork the repository.
-
-Create a new branch (git checkout -b feature-branch).
-
-Commit your changes (git commit -am 'Add new feature').
-
-Push to the branch (git push origin feature-branch).
-
-Create a pull request.
+ * Fork the repository.
+ * Create a new branch for your feature or bugfix (git checkout -b feature-branch).
+ * Commit your changes (git commit -am 'Add new feature').
+ * Push to the branch (git push origin feature-branch).
+ * Create a pull request explaining your changes.
