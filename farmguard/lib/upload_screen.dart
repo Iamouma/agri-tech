@@ -23,7 +23,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   }
 
   Future<void> _uploadImage(File image) async {
-    final uri = Uri.parse('http:192.168.216.72:5000/api/images/upload');
+    final uri = Uri.parse('http: backend-server-ip:5000/api/images/upload');
 
     // Create a multipart request
     var request = http.MultipartRequest('POST', uri);
