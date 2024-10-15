@@ -1,4 +1,4 @@
-# Farmguard.
+# Farmguard
 
 A Flutter-based mobile application that detects diseases in crops. This project is built using Flutter for the frontend and Node.js/Express.js for the backend. The application allows users to upload images of plants and receive disease classification results. The backend utilizes TensorFlow.js with the MobileNet model to identify potential diseases in plants.
 
