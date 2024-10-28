@@ -64,14 +64,18 @@ Create a .env file in the root directory with the following contents:
     PORT=5000
 
  * MongoDB Schema
- * 
+
 The data for each classified image is stored in a collection called images, using the following schema:
 
 filename (String) - The name of the uploaded image file.
+
 classification (Array) - An array of classification results, each containing:
 className (String) - The name of the detected disease or object.
+
 probability (Number) - The confidence level of the prediction (0 to 1).
+
 uploadedAt (Date) - The timestamp of when the image was uploaded (defaults to the current date and time).
+
 MongoDB Model Definition
 In the backend code, this schema is defined using Mongoose in the models/Image.js file:
 
@@ -95,9 +99,13 @@ Saving Classification Results to MongoDB
 After an image is classified by the TensorFlow model, the backend saves the image’s classification results and metadata to MongoDB:
 
 The image file is uploaded and classified.
+
 The classification result, including class names and probabilities, is saved to MongoDB.
+
 The database entry includes the image filename and timestamp.
+
 Viewing Classification History
+
 The API provides an endpoint to retrieve a history of all classified images:
 
 Endpoint: GET /api/images/history
@@ -117,9 +125,13 @@ Example response:
     ]
     
 Example Usage with MongoDB
+
 Start the MongoDB server (if running locally): mongod
+
 Run the backend server: node index.js
+
 Access MongoDB data: You can use tools like MongoDB Compass or the mongo shell command to view and manage data in the plantDiseaseDetection database.
+
 By storing classification results, this database integration allows users to maintain a history of analyzed images, making it easy to review past classifications or analyze trends in plant diseases.
 
 
