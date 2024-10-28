@@ -1,66 +1,50 @@
 const express = require('express');
 const multer = require('multer');
-const tf = require('@tensorflow/tfjs');
 const mobilenet = require('@tensorflow-models/mobilenet');
+const tf = require('@tensorflow/tfjs');
+const Image = require('../models/Image');  // Import the Image model
+
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const upload = multer({ dest: 'uploads/' });
 
-// Check if uploads folder exists, if not create it
-const uploadDir = path.join(__dirname, '../uploads/');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+router.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-// Set up Multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+    const imageBuffer = fs.readFileSync(req.file.path);
+    const decodedImage = tf.node.decodeImage(imageBuffer);
+    const model = await mobilenet.load();
+    const predictions = await model.classify(decodedImage);
+
+    decodedImage.dispose();
+
+    // Save image details and predictions to MongoDB
+    const newImage = new Image({
+      filename: req.file.filename,
+      classification: predictions,
+    });
+
+    await newImage.save();
+
+    res.status(200).json({
+      message: 'Image processed and saved to database',
+      predictions: predictions,
+    });
+  } catch (error) {
+    console.error('Error processing image:', error);
+    res.status(500).json({ error: 'Failed to process image' });
   }
 });
 
-const upload = multer({ storage: storage });
-
-// Function to load image and perform prediction
-const classifyImage = async (imagePath) => {
-  // Read the image file
-  const imageBuffer = fs.readFileSync(imagePath);
-
-  // Decode the image into a tensor
-  const imageTensor = tf.node.decodeImage(imageBuffer, 3);
-
-  // Load the MobileNet model
-  const model = await mobilenet.load();
-
-  // Make a prediction on the image
-  const predictions = await model.classify(imageTensor);
-
-  return predictions;
-};
-
-// Route to handle image uploads and classification
-router.post('/upload', upload.single('image'), async (req, res) => {
+router.get('/history', async (req, res) => {
   try {
-    // Log to check if the file is uploaded successfully
-    console.log(req.file);
-
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-
-    const imagePath = path.join(__dirname, '../uploads/', req.file.filename);
-
-    // Perform image classification
-    const predictions = await classifyImage(imagePath);
-
-    // Send the predictions as a response
-    res.json({ message: 'Image processed', predictions: predictions });
+    const images = await Image.find().sort({ uploadedAt: -1 });
+    res.status(200).json(images);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to analyze the image', error });
+    console.error('Error fetching image history:', error);
+    res.status(500).json({ error: 'Failed to fetch image history' });
   }
 });
 

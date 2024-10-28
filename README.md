@@ -47,7 +47,82 @@ The backend is built using Node.js and Express.js, integrating TensorFlow.js and
     ├── index.js                # Main server entry point
     ├── package.json            # Backend dependencies and scripts
     └── README.md               # Backend readme
+
+#### Database Integration
+This application uses MongoDB to store and manage image classification results. Each image uploaded and classified by the backend is saved in the database, along with relevant metadata.
+
+ * Database Setup
+
+To run this application with MongoDB, ensure you have MongoDB installed locally, or use a MongoDB cloud service such as MongoDB Atlas. The database connection URI is stored in an .env file for security.
+
+Install MongoDB (skip if using MongoDB Atlas or another hosted service).
+
+Create a .env file in the root directory with the following contents:
+
+
+    MONGODB_URI=mongodb://localhost:27017/plantDiseaseDetection
+    PORT=5000
+
+ * MongoDB Schema
+ * 
+The data for each classified image is stored in a collection called images, using the following schema:
+
+filename (String) - The name of the uploaded image file.
+classification (Array) - An array of classification results, each containing:
+className (String) - The name of the detected disease or object.
+probability (Number) - The confidence level of the prediction (0 to 1).
+uploadedAt (Date) - The timestamp of when the image was uploaded (defaults to the current date and time).
+MongoDB Model Definition
+In the backend code, this schema is defined using Mongoose in the models/Image.js file:
+
+    const mongoose = require('mongoose');
+
+    const imageSchema = new mongoose.Schema({
+      filename: { type: String, required: true },
+      classification: [
+        {
+          className: String,
+          probability: Number,
+        }
+      ],
+      uploadedAt: { type: Date, default: Date.now }
+    });
+
+    module.exports = mongoose.model('Image', imageSchema);
+
+Saving Classification Results to MongoDB
+
+After an image is classified by the TensorFlow model, the backend saves the image’s classification results and metadata to MongoDB:
+
+The image file is uploaded and classified.
+The classification result, including class names and probabilities, is saved to MongoDB.
+The database entry includes the image filename and timestamp.
+Viewing Classification History
+The API provides an endpoint to retrieve a history of all classified images:
+
+Endpoint: GET /api/images/history
+Description: Returns a list of all classified images and their details, sorted by upload date (newest first).
+Example response:
+
+    [
+      {
+        "_id": "614b1a4f6f1b2b1b1a8f4e8f",
+        "filename": "image_12345.jpg",
+        "classification": [
+          { "className": "Powdery Mildew", "probability": 0.95 },
+          { "className": "Early Blight", "probability": 0.05 }
+        ],
+        "uploadedAt": "2024-10-10T10:30:00.000Z"
+      }
+    ]
     
+Example Usage with MongoDB
+Start the MongoDB server (if running locally): mongod
+Run the backend server: node index.js
+Access MongoDB data: You can use tools like MongoDB Compass or the mongo shell command to view and manage data in the plantDiseaseDetection database.
+By storing classification results, this database integration allows users to maintain a history of analyzed images, making it easy to review past classifications or analyze trends in plant diseases.
+
+
 ##### Flutter Frontend
 
 The Flutter app allows users to select images from their gallery and send them to the backend. It displays the disease classification results to the user.
